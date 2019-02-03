@@ -248,6 +248,11 @@ func (r *Runner) Shutdown(ctxt context.Context, opts ...client.Option) error {
 	if runtime.GOOS == "darwin" && r.cmd != nil && r.cmd.Process != nil {
 		return r.cmd.Process.Signal(syscall.SIGTERM)
 	}
+	
+	// Quick fix: attempts to close chrome in headless mode
+	if r.cmd != nil && r.cmd.Process != nil {
+		return r.cmd.Process.Kill()
+	}
 
 	return nil
 }
